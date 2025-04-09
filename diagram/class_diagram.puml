@@ -1,0 +1,42 @@
+
+@startuml thermostatClassDiagram
+class ThermostatController {
+  - current_temp: float
+  - target_temp: float
+  - mode: str
+  - state: str
+  --
+  + get_status(): dict
+  + set_target_temp(temp: float): void
+  + set_mode(mode: str): void
+  + evaluate(): void
+  + force_state(state: str): void
+}
+
+class Config {
+  - cold_tolerance: float
+  - hot_tolerance: float
+  - min_cycle_duration: int
+  --
+  + load(): dict
+  + update(new_config: dict): void
+}
+
+class HistoryManager {
+  - entries: List[dict]
+  --
+  + get_history(): List[dict]
+  + add_entry(temp: float, state: str): void
+}
+
+class MqttClient {
+  - broker_url: str
+  --
+  + publish(topic: str, payload: str): void
+  + subscribe(topic: str): void
+}
+
+ThermostatController --> Config : uses
+ThermostatController --> HistoryManager : uses
+ThermostatController --> MqttClient : uses
+@enduml
