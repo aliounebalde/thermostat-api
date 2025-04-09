@@ -4,7 +4,7 @@
 from enum import Enum
 
 
-class ThermostatMode(Enum):
+class ThermostatMode(str, Enum):
     """Enum class for thermostat modes."""
 
     AUTO = "auto"

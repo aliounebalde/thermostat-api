@@ -1,16 +1,17 @@
 from pydantic import BaseModel, Field
-from ..utils.mode import ThermostatMode
+from ..utils.modeEnum import ThermostatMode
 import time
+from app import config
 
 
-class ThermostatController():
+class ThermostatController:
     def __init__(self):
         self.current_temperature: float | None
         self.target_temperature: float
         self.mode: ThermostatMode = ThermostatMode.AUTO
         self.state: str
         self.last_state_change = time.time()
-        self.min_cycle_duration = 300
+        self.min_cycle_duration = config.MIN_CYCLE_DURATION
 
     def get_status(self):
         """Get the current status of the thermostat."""
@@ -38,9 +39,9 @@ class ThermostatController():
         if now - self.last_state_change < self.min_cycle_duration:
             return
 
-        if self.current_temperature < self.target_temperature - self.cold_tolerance:
+        if self.current_temperature < self.target_temperature:  # - self.cold_tolerance:
             self.state = "on"
             self.last_state_change = now
-        elif self.current_temperature > self.target_temperature + self.hot_tolerance:
+        elif self.current_temperature > self.target_temperature:   # + self.hot_tolerance:
             self.state = "off"
             self.last_state_change = now
